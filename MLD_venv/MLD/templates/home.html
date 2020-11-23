@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+	<div class="row header">
+	<h2>Hi {{ user.username }}!</h2> <h3><a href="{% url 'logout' %}">Log Out</a></h3>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="dropdown">
+			<button onclick="myFunction()" id= "dropbtn" class="dropbtn">Choose an Image!</button>
+			
+			<div id="myDropdown" class="dropdown-content">
+				<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
+				{% for class_values in class_data %}
+					<a onclick ="img_select(this)" id="{{class_values}}" href='{{class_values}}'>{{class_values}}</a>
+				{% endfor %}
+				<!--<a href="#about">About</a>
+				<a href="#base">Base</a>
+				<a href="#blog">Blog</a>
+				<a href="#contact">Contact</a>
+				<a href="#custom">Custom</a>
+				<a href="#support">Support</a>
+				<a href="#tools">Tools</a>-->
+			</div>
+			</div>
+		</div>
+		{% block image %}
+		{% endblock %}
+	</div>
+	
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+	<script>
+		function myFunction() {
+		  document.getElementById("myDropdown").classList.toggle("show");
+		}
+		function img_select(ele){
+			var image = $(ele).attr('id');
+			localStorage.setItem('Img_name',image);
+			$("#myDropdown").hide();
+		}
+		document.getElementById("dropbtn").onclick = function(){
+			var txt = document.getElementById('dropbtn').innerHTML;
+			if (txt == 'Back to list' ){
+				document.getElementById('dropbtn').innerHTML='Choose an Image!';
+				$("#myDropdown").show();
+				//myFunction();
+				var url = "{% url 'MLD_app:home' %}";
+				document.location.href = url;
+			}
+			else{
+				myFunction();
+			}
+					
+		}
+		$(window).on('load', function() {
+			if(window.location.pathname != "/home/"){
+				document.getElementById('dropbtn').innerHTML='Back to list';
+			}
+		});
+		function filterFunction() {
+		  var input, filter, ul, li, a, i;
+		  input = document.getElementById("myInput");
+		  filter = input.value.toUpperCase();
+		  div = document.getElementById("myDropdown");
+		  a = div.getElementsByTagName("a");
+		  for (i = 0; i < a.length; i++) {
+			txtValue = a[i].textContent || a[i].innerText;
+			if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			  a[i].style.display = "";
+			} else {
+			  a[i].style.display = "none";
+			}
+		  }
+		}
+
+  </script>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

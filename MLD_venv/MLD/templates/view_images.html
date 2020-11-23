@@ -1,0 +1,23 @@
+{% extends 'home.html' %}
+
+
+<!--{{media_url}}{{user_val}}{{image}}.jpg-->
+{% block image %}
+{% if user_val == "laptop" or user_val == "person" %}
+	<div class="col-md-9">
+		<div class="row content">Displaying the {{user_val}} image </div>
+		{% for i in "x"|rjust:"1" %}
+			<div class="row">
+				{% for image in images %}
+			
+					<div class="col-md-3"><img src="{{media_url}}{{user_val}}/{{image}}" alt="{{user_val}}" width="150" height="150"> </div>
+				{% endfor %}
+			</div>
+		{% endfor %}
+	</div>
+{% else %}
+  <div class="row">There is no {{user_val}} image to display </div>
+  <!--<a href="{% url 'MLD:home' %}">Back to List</a>-->
+{% endif %}
+
+{% endblock %}
